@@ -10,15 +10,12 @@ def get_args():
 
 
 def get_all_files(directory_path):
-    # based on https://stackoverflow.com/a/40061513/8482475
     dict_of_files = defaultdict(list)
-    file_description = namedtuple("File", "Name Size")
+    file_info = namedtuple("File", "Name Size")
     for root, dirs, files in os.walk(directory_path, topdown=True):
-        for name in files:
-            path_to_file = os.path.join(root, name)
-            description = file_description(name, os.path.getsize(path_to_file))
-            # Creates dictionary where key stores description of the file
-            # and value stores all paths to this file
+        for file in files:
+            path_to_file = os.path.join(root, file)
+            description = file_info(file, os.path.getsize(path_to_file))
             dict_of_files[description].append(path_to_file)
     return dict_of_files
 
@@ -31,8 +28,11 @@ def find_duplicates(file_list):
 if __name__ == "__main__":
     path = get_args().path
     duplicates = find_duplicates(get_all_files(path))
-    for file, file_paths in duplicates.items():
-        print("File: {}. Size: {}. Copies at: ".format(file.Name, file.Size))
+    for file_description, file_paths in duplicates.items():
+        print("File: {}. Size: {}. Copies at: ".format(
+            file_description.Name,
+            file_description.Size
+        ))
         for path in file_paths:
             print("- ", path)
-        print("\t")  # file-divider
+        print("\t")
