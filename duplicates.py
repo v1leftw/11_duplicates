@@ -12,10 +12,10 @@ def get_args():
 def get_all_files(directory_path):
     dict_of_files = defaultdict(list)
     file_info = namedtuple("File", "Name Size")
-    for root, dirs, files in os.walk(directory_path, topdown=True):
-        for file in files:
-            path_to_file = os.path.join(root, file)
-            description = file_info(file, os.path.getsize(path_to_file))
+    for root, dirs, filenames in os.walk(directory_path, topdown=True):
+        for filename in filenames:
+            path_to_file = os.path.join(root, filename)
+            description = file_info(filename, os.path.getsize(path_to_file))
             dict_of_files[description].append(path_to_file)
     return dict_of_files
 
